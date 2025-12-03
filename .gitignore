@@ -38,6 +38,3 @@ crash.*.log
 
 # Documentation generation
 /docs/
-
-# Generated files
-internal/client/client_gen.go
