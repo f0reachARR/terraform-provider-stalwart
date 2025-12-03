@@ -1,0 +1,10 @@
+package: client
+generate:
+  models: true
+  client: true
+  embedded-spec: true
+output: internal/client/client_gen.go
+output-options:
+  skip-prune: true
+compatibility:
+  always-prefix-enum-values: true
