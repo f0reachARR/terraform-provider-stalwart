@@ -297,10 +297,11 @@ func (r *principalResource) Read(ctx context.Context, req resource.ReadRequest, 
 			state.Quota = types.Int64Value(int64(*data.Quota))
 		}
 
-		// Handle emails - in the API it's a string, not an array
-		// This needs to be parsed properly based on actual API behavior
+		// Handle emails - According to the OpenAPI spec, the emails field is returned as a string
+		// (not an array as one might expect). This appears to be how the API represents the data.
+		// We convert it to a list for consistency with the Terraform resource schema.
 		if data.Emails != nil && *data.Emails != "" {
-			// For now, treat as a single email
+			// Treat as a single email string from the API
 			emailsList, diags := types.ListValueFrom(ctx, types.StringType, []string{*data.Emails})
 			resp.Diagnostics.Append(diags...)
 			state.Emails = emailsList

@@ -137,9 +137,18 @@ func (r *dkimSignatureResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	// Note: The OpenAPI spec doesn't have a GET endpoint for DKIM signatures
-	// So we'll just maintain the state as-is
-	// In a production implementation, you might want to verify via settings API
+	// Note: The Stalwart OpenAPI specification (v1) does not provide a GET endpoint
+	// for retrieving DKIM signatures. The signature configuration is stored in the
+	// server's settings/configuration, but there's no direct API to query it.
+	// 
+	// In a production implementation, you could:
+	// 1. Use the /settings/keys or /settings endpoints to verify the signature exists
+	// 2. Store the signature data in the Terraform state during creation
+	// 3. Accept that DKIM signatures are write-only resources
+	//
+	// For now, we maintain the state as-is and rely on Terraform state management.
+	// This means the resource won't detect drift if the DKIM signature is deleted
+	// outside of Terraform.
 
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
@@ -154,7 +163,17 @@ func (r *dkimSignatureResource) Update(ctx context.Context, req resource.UpdateR
 }
 
 func (r *dkimSignatureResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	// Note: The OpenAPI spec doesn't have a DELETE endpoint for DKIM signatures
-	// In practice, DKIM signatures would be removed via settings API or configuration
-	// For now, we'll just remove from state
+	// Note: The Stalwart OpenAPI specification (v1) does not provide a DELETE endpoint
+	// for DKIM signatures. DKIM signatures are typically managed as part of the server's
+	// configuration and would need to be removed via the /settings endpoint.
+	//
+	// In a production implementation, you would:
+	// 1. Use DELETE /settings with the appropriate prefix to remove the DKIM configuration
+	// 2. Or use POST /settings with a "clear" action to remove the signature settings
+	//
+	// For now, we only remove the resource from Terraform state. This is a limitation
+	// of the current API design. Users who need to fully delete DKIM signatures should
+	// do so through the Stalwart admin interface or by using the settings resource directly.
+	//
+	// This is documented in the resource schema as a known limitation.
 }
