@@ -1,0 +1,40 @@
+# Terraform provider development overrides for local testing
+terraform.rc
+
+# Build artifacts
+/terraform-provider-stalwart
+*.dll
+*.so
+*.dylib
+*.exe
+*.test
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+
+# Documentation generation
+/docs/
